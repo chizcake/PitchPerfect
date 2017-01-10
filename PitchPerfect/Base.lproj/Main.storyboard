@@ -29,16 +29,16 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tab to Record" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gCj-XO-iOc" userLabel="RecordStatusLabel">
-                                <rect key="frame" x="134" y="434" width="107" height="21"/>
+                                <rect key="frame" x="134" y="419" width="107" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nn9-YZ-ZS6" userLabel="StopRecordingButton">
-                                <rect key="frame" x="152" y="510" width="70" height="70"/>
+                                <rect key="frame" x="155.5" y="455" width="64" height="64"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="70" id="K5d-ph-1Lv"/>
-                                    <constraint firstAttribute="width" constant="70" id="uMb-dt-HXn"/>
+                                    <constraint firstAttribute="width" constant="64" id="IWz-tg-Xqh"/>
+                                    <constraint firstAttribute="height" constant="64" id="LEH-MV-bTP"/>
                                 </constraints>
                                 <state key="normal" image="Stop"/>
                                 <connections>
@@ -48,12 +48,12 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="nn9-YZ-ZS6" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7lK-ef-UVd"/>
                             <constraint firstItem="Hjj-Gz-sDn" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="HkF-si-h2i"/>
                             <constraint firstItem="Hjj-Gz-sDn" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="JSV-Qa-gQi"/>
                             <constraint firstItem="gCj-XO-iOc" firstAttribute="centerX" secondItem="Hjj-Gz-sDn" secondAttribute="centerX" id="Sh7-Pt-Ria"/>
-                            <constraint firstItem="nn9-YZ-ZS6" firstAttribute="top" secondItem="gCj-XO-iOc" secondAttribute="bottom" constant="55" id="e13-Mg-MU3"/>
-                            <constraint firstItem="gCj-XO-iOc" firstAttribute="top" secondItem="Hjj-Gz-sDn" secondAttribute="bottom" constant="23" id="fQY-fb-ZI9"/>
-                            <constraint firstItem="nn9-YZ-ZS6" firstAttribute="centerX" secondItem="gCj-XO-iOc" secondAttribute="centerX" id="gmX-GT-io8"/>
+                            <constraint firstItem="gCj-XO-iOc" firstAttribute="top" secondItem="Hjj-Gz-sDn" secondAttribute="bottom" constant="8" id="fQY-fb-ZI9"/>
+                            <constraint firstItem="nn9-YZ-ZS6" firstAttribute="top" secondItem="gCj-XO-iOc" secondAttribute="bottom" constant="15" id="pq2-le-NFK"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="lqb-S1-Wpa"/>
@@ -61,30 +61,55 @@
                         <outlet property="recordButton" destination="Hjj-Gz-sDn" id="koL-Fx-hsO"/>
                         <outlet property="recordStatusLabel" destination="gCj-XO-iOc" id="Ylg-Xn-vSg"/>
                         <outlet property="stopRecordingButton" destination="nn9-YZ-ZS6" id="9lP-wC-jd9"/>
-                        <segue destination="j6N-BQ-mN8" kind="show" identifier="PlaybackSegue" id="sBI-pf-nWS"/>
+                        <segue destination="hon-wh-0C1" kind="show" identifier="PlaybackSegue" id="R0a-PY-i3f"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="964" y="34.632683658170919"/>
         </scene>
-        <!--Play Sounds View Controller-->
-        <scene sceneID="zOQ-iC-xrn">
+        <!--Play Sound Effects View Controller-->
+        <scene sceneID="RTt-yK-MBf">
             <objects>
-                <viewController id="j6N-BQ-mN8" customClass="PlaySoundsViewController" customModule="PitchPerfect" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="hon-wh-0C1" customClass="PlaySoundEffectsViewController" customModule="PitchPerfect" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="3Zj-er-zFi"/>
-                        <viewControllerLayoutGuide type="bottom" id="xJx-JA-gfz"/>
+                        <viewControllerLayoutGuide type="top" id="fac-r0-6jv"/>
+                        <viewControllerLayoutGuide type="bottom" id="TrA-AD-dDO"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="5x8-6s-QCR">
+                    <view key="view" contentMode="scaleToFill" id="MdN-mE-Tdx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.95431119109999996" green="0.95431119109999996" blue="0.95431119109999996" alpha="0.85926418439999996" colorSpace="calibratedRGB"/>
+                        <subviews>
+                            <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9eu-GN-oaK">
+                                <rect key="frame" x="0.0" y="72" width="375" height="312"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="312" id="bsM-TX-9uR"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dataSource" destination="hon-wh-0C1" id="KyY-ir-LHJ"/>
+                                </connections>
+                            </pickerView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="afe-a1-oj7">
+                                <rect key="frame" x="165" y="595" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="9eu-GN-oaK" firstAttribute="leading" secondItem="MdN-mE-Tdx" secondAttribute="leading" id="HBA-GS-9yj"/>
+                            <constraint firstAttribute="trailing" secondItem="9eu-GN-oaK" secondAttribute="trailing" id="LX1-33-CN4"/>
+                            <constraint firstItem="9eu-GN-oaK" firstAttribute="top" secondItem="fac-r0-6jv" secondAttribute="bottom" constant="8" symbolic="YES" id="mnA-f0-83j"/>
+                            <constraint firstItem="9eu-GN-oaK" firstAttribute="centerX" secondItem="afe-a1-oj7" secondAttribute="centerX" id="r0B-N5-aiY"/>
+                            <constraint firstItem="TrA-AD-dDO" firstAttribute="top" secondItem="afe-a1-oj7" secondAttribute="bottom" constant="42" id="sh6-pO-abj"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="effectPickerView" destination="9eu-GN-oaK" id="D8I-D6-FAj"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="pSw-g8-yF7" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kT8-OY-0BY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1929" y="35"/>
+            <point key="canvasLocation" x="1928.8" y="34.632683658170919"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="daj-8V-cvG">
