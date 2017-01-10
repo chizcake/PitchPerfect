@@ -1,4 +1,7 @@
 # PitchPerfect Application
+
+![build_statue_badge](https://travis-ci.org/chizcake/PitchPerfect.svg?branch=master)
+
 ### Overview
 - - - -
 > This application is made for the course **Intro to iOS App Development in Swift** by [Udacity](https://www.udacity.com/course/intro-to-ios-app-development-with-swift--ud585)
