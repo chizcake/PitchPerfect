@@ -16,49 +16,40 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
     var audioEngine: AVAudioEngine!
     var audioPlayerNode: AVAudioPlayerNode!
     var stopTimer: Timer!
+	var audioPlayer: AVAudioPlayer!
+	var displayTimer: Timer?
+	var currentTime = 0
 
     var effectTitles = ["Choose Sound Effect", "Fast Effect", "Slow Effect", "High Pitch Effect", "Low Pitch Effect", "Echo Effect", "Reverb Effect"]
+    var selectedRow: Int!
     
     enum EffectType: Int { case fast = 1, slow, highPitch, lowPitch, echo, reverb }
     
     @IBOutlet weak var effectPickerView: UIPickerView!
+    @IBOutlet weak var audioControlPanel: UIView!
+    @IBOutlet weak var progressView: UIProgressView!
+    @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var stopButton: UIButton!
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return 60
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        stopAudio()
+        selectedRow = row
         
-        switch row {
-        case EffectType.fast.rawValue:
-            playSound(rate: 1.5)
-            
-        case EffectType.slow.rawValue:
-            playSound(rate: 0.5)
-            
-        case EffectType.highPitch.rawValue:
-            playSound(pitch: 1000)
-            
-        case EffectType.lowPitch.rawValue:
-            playSound(pitch: -1000)
-            
-        case EffectType.echo.rawValue:
-            playSound(echo: true)
-            
-        case EffectType.reverb.rawValue:
-            playSound(reverb: true)
-            
-        default:
-//            configureUI(.notPlaying)
-            print("default row")
+        if row == 0 {
+            audioControlPanel.isHidden = true
+        } else {
+            audioControlPanel.isHidden = false
+            configureUI(.notPlaying)
         }
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return effectTitles.count
     }
-    
+
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -103,6 +94,41 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         return customView
     }
     
+    @IBAction func actionPlayButton(_ sender: Any) {
+        stopAudio()
+        configureUI(.playing)
+        
+        switch selectedRow {
+        case EffectType.fast.rawValue:
+            playSound(rate: 1.5)
+            
+        case EffectType.slow.rawValue:
+            playSound(rate: 0.5)
+            
+        case EffectType.highPitch.rawValue:
+            playSound(pitch: 1000)
+            
+        case EffectType.lowPitch.rawValue:
+            playSound(pitch: -1000)
+            
+        case EffectType.echo.rawValue:
+            playSound(echo: true)
+            
+        case EffectType.reverb.rawValue:
+            playSound(reverb: true)
+            
+        default:
+            stopAudio()
+        }
+    }
+    
+    @IBAction func actionStopButton(_ sender: Any) {
+		audioPlayer.stop()
+		displayTimer!.invalidate()
+		displayTimer = nil
+        stopAudio()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -110,6 +136,7 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         effectPickerView.delegate = self
         effectPickerView.dataSource = self
         setupAudio()
+        audioControlPanel.isHidden = true
     }
 
 }

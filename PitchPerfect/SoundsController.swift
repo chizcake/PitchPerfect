@@ -53,12 +53,8 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
         
         // node for adjusting rate/pitch
         let changeRatePitchNode = AVAudioUnitTimePitch()
-        if let pitch = pitch {
-            changeRatePitchNode.pitch = pitch
-        }
-        if let rate = rate {
-            changeRatePitchNode.rate = rate
-        }
+        if let pitch = pitch { changeRatePitchNode.pitch = pitch }
+        if let rate = rate { changeRatePitchNode.rate = rate }
         audioEngine.attach(changeRatePitchNode)
         
         // node for echo
@@ -85,10 +81,9 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
         
         // schedule to play and start the engine!
         audioPlayerNode.stop()
+        
+        var delayInSeconds: Double = 0
         audioPlayerNode.scheduleFile(audioFile, at: nil) {
-            
-            var delayInSeconds: Double = 0
-            
             if let lastRenderTime = self.audioPlayerNode.lastRenderTime, let playerTime = self.audioPlayerNode.playerTime(forNodeTime: lastRenderTime) {
                 
                 if let rate = rate {
@@ -99,37 +94,67 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
             }
             
             // schedule a stop timer for when audio finishes playing
-            self.stopTimer = Timer(timeInterval: delayInSeconds, target: self, selector: #selector(PlaySoundEffectsViewController.stopAudio), userInfo: nil, repeats: false)
+            self.stopTimer = Timer(timeInterval: delayInSeconds, target: self, selector: #selector(self.stopAudio), userInfo: nil, repeats: false)
+            
             RunLoop.main.add(self.stopTimer!, forMode: RunLoopMode.defaultRunLoopMode)
         }
         
-        do {
-            try audioEngine.start()
-        } catch {
+        do { try audioEngine.start() }
+        catch {
             showAlert(Alerts.AudioEngineError, message: String(describing: error))
             return
         }
         
         // play the recording!
-        audioPlayerNode.play()
+//        audioPlayerNode.play()
+		
+//        let currentTime: Double
+//        if let rate = rate {
+//            currentTime = Double(audioFile.length) / audioFile.processingFormat.sampleRate / Double(rate)
+//        } else {
+//            currentTime = Double(audioFile.length) / audioFile.processingFormat.sampleRate
+//        }
+		
+		do {
+			try audioPlayer = AVAudioPlayer(contentsOf: self.recordedAudioURL)
+			audioPlayer.volume = 0.0
+			if let rate = rate {
+				audioPlayer.enableRate = true
+				audioPlayer.rate = rate
+			}
+			audioPlayer.play()
+			audioPlayerNode.play()
+			displayTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateProgressView), userInfo: nil, repeats: true)
+			
+			if !audioPlayerNode.isPlaying {
+				audioPlayer.stop()
+				displayTimer!.invalidate()
+				displayTimer = nil
+			}
+			
+		} catch {
+			showAlert(Alerts.AudioFileError, message: String(describing: error))
+		}
     }
-    
+	
+	func updateProgressView() {
+		if audioPlayer.isPlaying {
+			progressView.setProgress(Float(audioPlayer.currentTime / audioPlayer.duration), animated: true)
+		}
+	}
+	
     func stopAudio() {
+        if let audioPlayerNode = audioPlayerNode { audioPlayerNode.stop() }
         
-        if let audioPlayerNode = audioPlayerNode {
-            audioPlayerNode.stop()
-        }
-        
-        if let stopTimer = stopTimer {
-            stopTimer.invalidate()
-        }
-        
-//        configureUI(.notPlaying)
+        if let stopTimer = self.stopTimer { stopTimer.invalidate() }
         
         if let audioEngine = audioEngine {
             audioEngine.stop()
             audioEngine.reset()
         }
+        
+        configureUI(.notPlaying)
+		self.progressView.progress = 0.0
     }
     
     // MARK: Connect List of Audio Nodes
@@ -141,6 +166,18 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
     }
     
     // MARK: UI Functions
+    
+    func configureUI(_ state: PlayingState) {
+        switch state {
+        case .notPlaying:
+            self.playButton.isEnabled = true
+            self.stopButton.isEnabled = false
+            
+        case .playing:
+            self.playButton.isEnabled = false
+            self.stopButton.isEnabled = true
+        }
+    }
     
     func showAlert(_ title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
