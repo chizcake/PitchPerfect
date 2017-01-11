@@ -54,6 +54,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         if flag {
+			// When recording process is finished successfully, perform "PlaybackSegue" segue to playback effected audio.
             performSegue(withIdentifier: "PlaybackSegue", sender: audioRecorder.url)
         } else {
             print("Recording was not successful")
@@ -64,6 +65,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         if segue.identifier == "PlaybackSegue" {
             let playSoundsVC = segue.destination as! PlaySoundEffectsViewController
             let recordedAudioURL = sender as! URL
+			// Send the URL of the recorded audio file to PlaySoundEffectsViewController for handling this file.
             playSoundsVC.recordedAudioURL = recordedAudioURL
         }
     }

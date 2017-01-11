@@ -30,30 +30,39 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
     @IBOutlet weak var progressView: UIProgressView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
-    
+	
+	// MARK: Configure UIPickerView
+	
+	// This method returns the height of a row of the picker view.
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return 60
     }
-    
+	
+	// This method defines when a row is selected.
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         selectedRow = row
         
         if row == 0 {
+			// If an user choose no audio effect.
             audioControlPanel.isHidden = true
         } else {
+			// If an user choose an audio effect.
             audioControlPanel.isHidden = false
             configureUI(.notPlaying)
         }
     }
-    
+	
+	// This method returns the number of rows picker view will have.
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return effectTitles.count
     }
 
+	// This method returns the number how many components a row will have.
     public func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-    
+	
+	// This method defines the view of a row.
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         let customView = UIView(frame: CGRect(x: 0, y: 0, width: pickerView.bounds.width - 30, height: 60))
         let effectImageView = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
@@ -93,7 +102,9 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         customView.addSubview(effectLabel)
         return customView
     }
-    
+	
+	// MARK: IBAction methods
+	
     @IBAction func actionPlayButton(_ sender: Any) {
         stopAudio()
         configureUI(.playing)
@@ -128,7 +139,9 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
 		displayTimer = nil
         stopAudio()
     }
-    
+	
+	// MARK: viewDidLoad method
+	
     override func viewDidLoad() {
         super.viewDidLoad()
 

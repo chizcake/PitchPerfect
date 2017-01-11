@@ -81,9 +81,9 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
         
         // schedule to play and start the engine!
         audioPlayerNode.stop()
-        
-        var delayInSeconds: Double = 0
         audioPlayerNode.scheduleFile(audioFile, at: nil) {
+			var delayInSeconds: Double = 0
+			
             if let lastRenderTime = self.audioPlayerNode.lastRenderTime, let playerTime = self.audioPlayerNode.playerTime(forNodeTime: lastRenderTime) {
                 
                 if let rate = rate {
@@ -104,26 +104,25 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
             showAlert(Alerts.AudioEngineError, message: String(describing: error))
             return
         }
-        
-        // play the recording!
-//        audioPlayerNode.play()
 		
-//        let currentTime: Double
-//        if let rate = rate {
-//            currentTime = Double(audioFile.length) / audioFile.processingFormat.sampleRate / Double(rate)
-//        } else {
-//            currentTime = Double(audioFile.length) / audioFile.processingFormat.sampleRate
-//        }
+		// MARK: Configure UIProgressView
 		
 		do {
+			// Use AVAudioPlayer to synchronize current time and duration time of played audio.
 			try audioPlayer = AVAudioPlayer(contentsOf: self.recordedAudioURL)
+			
+			// Mute the audio volume fo audioPlayer
 			audioPlayer.volume = 0.0
 			if let rate = rate {
 				audioPlayer.enableRate = true
 				audioPlayer.rate = rate
 			}
+			
+			// play the recording!
 			audioPlayer.play()
 			audioPlayerNode.play()
+			
+			// Configure timer used in UIProgressView
 			displayTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateProgressView), userInfo: nil, repeats: true)
 			
 			if !audioPlayerNode.isPlaying {
@@ -137,7 +136,9 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
 		}
     }
 	
+	// This method is used by displayTimer
 	func updateProgressView() {
+		// Set the progress if audio is being played
 		if audioPlayer.isPlaying {
 			progressView.setProgress(Float(audioPlayer.currentTime / audioPlayer.duration), animated: true)
 		}
