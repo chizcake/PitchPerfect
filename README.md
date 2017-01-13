@@ -23,7 +23,7 @@
 
 ### At a Glance
 - - - -
-[![Demo GIF](https://j.gifs.com/mwkY0E.gif)](assets/Introduction_to_PitchPerfect.m4v)
+[![Demo GIF](https://j.gifs.com/mwkY0E.gif)](Introduction_to_PitchPerfect.m4v)
 
 ### Screenshot
 - - - -
