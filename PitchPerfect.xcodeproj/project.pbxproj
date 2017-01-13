@@ -62,12 +62,20 @@
 				CC31490B1E223DB60096394A /* RecordSoundsViewController.swift */,
 				CC31490D1E223DB60096394A /* Main.storyboard */,
 				CC3149291E2460B70096394A /* PlaySoundEffectsViewController.swift */,
+				CCCBA4BE1E27D7ED00ACD42F /* New Group */,
 				CC31491D1E22E85E0096394A /* SoundsController.swift */,
 				CC3149101E223DB60096394A /* Assets.xcassets */,
 				CC3149121E223DB60096394A /* LaunchScreen.storyboard */,
 				CC3149151E223DB60096394A /* Info.plist */,
 			);
 			path = PitchPerfect;
+			sourceTree = "<group>";
+		};
+		CCCBA4BE1E27D7ED00ACD42F /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

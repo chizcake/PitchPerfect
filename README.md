@@ -21,16 +21,20 @@
 * Progress view shows the progress of played audio.
 * You can choose audio effects through the picker view. So you can understand which icon has an effect that you want.
 
+### At a Glance
+- - - -
+[![Demo GIF](https://j.gifs.com/j2B0Lz.gif)](assets/Introduction_to_PitchPerfect.mov)
+
 ### Screenshot
 - - - -
 > Screenshots of the application when the screen is portrait.
 
-![portrait_view](images/portrait.png)
+![portrait_view](assets/portrait.png)
     
     
 > Screenshots of the application when the screen is landscape.
 
-![landscape_view](images/landscape.png)
+![landscape_view](assets/landscape.png)
 
 
 ### License
