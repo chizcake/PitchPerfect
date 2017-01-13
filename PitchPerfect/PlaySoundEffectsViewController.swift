@@ -10,18 +10,23 @@ import UIKit
 import AVFoundation
 
 class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
-    
+	
+	// MARK: Properties
+	
     var recordedAudioURL: URL!
     var audioFile: AVAudioFile!
     var audioEngine: AVAudioEngine!
     var audioPlayerNode: AVAudioPlayerNode!
     var stopTimer: Timer!
-	var audioPlayer: AVAudioPlayer!
-	var displayTimer: Timer?
-	var currentTime = 0
+	
+	// Properties for UIProgressView
+	var duration: Double!
+	var progressTimer: Timer!
+	var currentProgress: Double!
 
+	// Properties for UIPickerView
+	var selectedRow: Int!
     var effectTitles = ["Choose Sound Effect", "Fast Effect", "Slow Effect", "High Pitch Effect", "Low Pitch Effect", "Echo Effect", "Reverb Effect"]
-    var selectedRow: Int!
     
     enum EffectType: Int { case fast = 1, slow, highPitch, lowPitch, echo, reverb }
     
@@ -109,34 +114,30 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         stopAudio()
         configureUI(.playing)
         
-        switch selectedRow {
-        case EffectType.fast.rawValue:
+		switch EffectType(rawValue: selectedRow)! {
+        case .fast:
             playSound(rate: 1.5)
             
-        case EffectType.slow.rawValue:
+        case .slow:
             playSound(rate: 0.5)
             
-        case EffectType.highPitch.rawValue:
+        case .highPitch:
             playSound(pitch: 1000)
             
-        case EffectType.lowPitch.rawValue:
+        case .lowPitch:
             playSound(pitch: -1000)
             
-        case EffectType.echo.rawValue:
+        case .echo:
             playSound(echo: true)
             
-        case EffectType.reverb.rawValue:
+        case .reverb:
             playSound(reverb: true)
-            
-        default:
-            stopAudio()
         }
+		
+		startProgressView()
     }
     
     @IBAction func actionStopButton(_ sender: Any) {
-		audioPlayer.stop()
-		displayTimer!.invalidate()
-		displayTimer = nil
         stopAudio()
     }
 	
@@ -148,8 +149,8 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         // Do any additional setup after loading the view.
         effectPickerView.delegate = self
         effectPickerView.dataSource = self
+		audioControlPanel.isHidden = true
         setupAudio()
-        audioControlPanel.isHidden = true
     }
 
 }

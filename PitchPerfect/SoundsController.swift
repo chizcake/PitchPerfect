@@ -37,6 +37,8 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
         // initialize (recording) audio file
         do {
             audioFile = try AVAudioFile(forReading: recordedAudioURL as URL)
+			initiateProgressView()
+			
         } catch {
             showAlert(Alerts.AudioFileError, message: String(describing: error))
         }
@@ -53,9 +55,16 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
         
         // node for adjusting rate/pitch
         let changeRatePitchNode = AVAudioUnitTimePitch()
-        if let pitch = pitch { changeRatePitchNode.pitch = pitch }
-        if let rate = rate { changeRatePitchNode.rate = rate }
-        audioEngine.attach(changeRatePitchNode)
+        if let pitch = pitch {
+			changeRatePitchNode.pitch = pitch
+		}
+		
+        if let rate = rate {
+			changeRatePitchNode.rate = rate
+			duration = duration / Double(rate)
+		}
+		
+		audioEngine.attach(changeRatePitchNode)
         
         // node for echo
         let echoNode = AVAudioUnitDistortion()
@@ -71,24 +80,29 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
         // connect nodes
         if echo == true && reverb == true {
             connectAudioNodes(audioPlayerNode, changeRatePitchNode, echoNode, reverbNode, audioEngine.outputNode)
-        } else if echo == true {
+			
+		} else if echo == true {
             connectAudioNodes(audioPlayerNode, changeRatePitchNode, echoNode, audioEngine.outputNode)
-        } else if reverb == true {
+			
+		} else if reverb == true {
             connectAudioNodes(audioPlayerNode, changeRatePitchNode, reverbNode, audioEngine.outputNode)
-        } else {
+			
+		} else {
             connectAudioNodes(audioPlayerNode, changeRatePitchNode, audioEngine.outputNode)
         }
         
         // schedule to play and start the engine!
         audioPlayerNode.stop()
         audioPlayerNode.scheduleFile(audioFile, at: nil) {
+			
 			var delayInSeconds: Double = 0
 			
             if let lastRenderTime = self.audioPlayerNode.lastRenderTime, let playerTime = self.audioPlayerNode.playerTime(forNodeTime: lastRenderTime) {
                 
                 if let rate = rate {
                     delayInSeconds = Double(self.audioFile.length - playerTime.sampleTime) / Double(self.audioFile.processingFormat.sampleRate) / Double(rate)
-                } else {
+					
+				} else {
                     delayInSeconds = Double(self.audioFile.length - playerTime.sampleTime) / Double(self.audioFile.processingFormat.sampleRate)
                 }
             }
@@ -99,55 +113,28 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
             RunLoop.main.add(self.stopTimer!, forMode: RunLoopMode.defaultRunLoopMode)
         }
         
-        do { try audioEngine.start() }
-        catch {
+        do {
+			try audioEngine.start()
+		
+		} catch {
             showAlert(Alerts.AudioEngineError, message: String(describing: error))
             return
         }
 		
-		// MARK: Configure UIProgressView
-		
-		do {
-			// Use AVAudioPlayer to synchronize current time and duration time of played audio.
-			try audioPlayer = AVAudioPlayer(contentsOf: self.recordedAudioURL)
-			
-			// Mute the audio volume fo audioPlayer
-			audioPlayer.volume = 0.0
-			if let rate = rate {
-				audioPlayer.enableRate = true
-				audioPlayer.rate = rate
-			}
-			
-			// play the recording!
-			audioPlayer.play()
-			audioPlayerNode.play()
-			
-			// Configure timer used in UIProgressView
-			displayTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(updateProgressView), userInfo: nil, repeats: true)
-			
-			if !audioPlayerNode.isPlaying {
-				audioPlayer.stop()
-				displayTimer!.invalidate()
-				displayTimer = nil
-			}
-			
-		} catch {
-			showAlert(Alerts.AudioFileError, message: String(describing: error))
-		}
-    }
-	
-	// This method is used by displayTimer
-	func updateProgressView() {
-		// Set the progress if audio is being played
-		if audioPlayer.isPlaying {
-			progressView.setProgress(Float(audioPlayer.currentTime / audioPlayer.duration), animated: true)
-		}
+		// play the recording!
+		audioPlayerNode.play()
 	}
 	
     func stopAudio() {
-        if let audioPlayerNode = audioPlayerNode { audioPlayerNode.stop() }
+		initiateProgressView()
+		
+        if let audioPlayerNode = audioPlayerNode {
+			audioPlayerNode.stop()
+		}
         
-        if let stopTimer = self.stopTimer { stopTimer.invalidate() }
+        if let stopTimer = self.stopTimer {
+			stopTimer.invalidate()
+		}
         
         if let audioEngine = audioEngine {
             audioEngine.stop()
@@ -155,8 +142,32 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
         }
         
         configureUI(.notPlaying)
-		self.progressView.progress = 0.0
     }
+	
+	// MARK: Configuration of UIProgressView
+	
+	func startProgressView() {
+		progressTimer = Timer.scheduledTimer(timeInterval: 0.01, target: self, selector: #selector(PlaySoundEffectsViewController.updateProgressView), userInfo: nil, repeats: true)
+		progressTimer.fire()
+	}
+	
+	func updateProgressView() {
+		currentProgress = currentProgress + (0.01 / duration!)
+		progressView.setProgress(Float(currentProgress), animated: true)
+	}
+	
+	// Initiate all properties about UIProgressView
+	func initiateProgressView() {
+		if progressTimer == nil {
+			progressTimer = Timer()
+		} else if progressTimer.isValid {
+			progressTimer.invalidate()
+		}
+		
+		progressView.progress = 0.0
+		currentProgress = 0
+		duration = Double(audioFile.length) / audioFile.fileFormat.sampleRate
+	}
     
     // MARK: Connect List of Audio Nodes
     
