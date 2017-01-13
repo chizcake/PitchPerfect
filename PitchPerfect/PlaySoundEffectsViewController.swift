@@ -141,7 +141,7 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         stopAudio()
     }
 	
-	// MARK: viewDidLoad method
+	// MARK: Override methods
 	
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,8 +149,11 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         // Do any additional setup after loading the view.
         effectPickerView.delegate = self
         effectPickerView.dataSource = self
-		audioControlPanel.isHidden = true
         setupAudio()
     }
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		audioControlPanel.isHidden = true
+	}
 }

@@ -25,7 +25,7 @@
 - - - -
 > If you click this gif file, you can download a full introduction movie about PitchPerfect application :-)
 
-[![Demo GIF](https://j.gifs.com/mwkY0E.gif)](Introduction_to_PitchPerfect.m4v)
+[![Demo GIF](https://j.gifs.com/Wn18Go.gif)](Introduction_to_PitchPerfect.m4v)
 
 ### Screenshot
 - - - -
