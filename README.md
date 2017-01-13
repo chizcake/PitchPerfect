@@ -1,6 +1,4 @@
-# PitchPerfect Application
-
-![build_statue_badge](https://travis-ci.org/chizcake/PitchPerfect.svg?branch=master)
+# PitchPerfect Application ![build_statue_badge](https://travis-ci.org/chizcake/PitchPerfect.svg?branch=master)
 
 ### Overview
 - - - -
@@ -41,4 +39,4 @@
 
 ### License
 - - - -
-Freely provided under the **MIT License**.
+Freely provided under the [**MIT License**](LICENSE)
