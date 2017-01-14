@@ -133,8 +133,6 @@ class PlaySoundEffectsViewController: UIViewController, UIPickerViewDelegate, UI
         case .reverb:
             playSound(reverb: true)
         }
-		
-		startProgressView()
     }
     
     @IBAction func actionStopButton(_ sender: Any) {

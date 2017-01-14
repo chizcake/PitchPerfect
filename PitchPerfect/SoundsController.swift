@@ -123,6 +123,7 @@ extension PlaySoundEffectsViewController : AVAudioPlayerDelegate {
 		
 		// play the recording!
 		audioPlayerNode.play()
+		startProgressView()
 	}
 	
     func stopAudio() {
